@@ -147,12 +147,21 @@ def main():
     
     # Main header
     st.markdown('<h1 class="main-header">Device Lifecycle Dashboard</h1>', unsafe_allow_html=True)
+
+    st.markdown(
+        """
+        <div style='text-align: center; margin-top: -1.5rem; margin-bottom: 2rem;'>
+            <p style='font-size: 1.2rem; color: #666;'>A small project by Payam Saeedi</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
     
     # Data source citation - right under the title
     st.markdown(
         """
         <div style='text-align: left; margin-bottom: 2rem; padding: 1rem; background: white; border-radius: 10px; border: 2px solid #9932CC;'>
-            <h4 style='margin-top: 0; color: black;'>Data Source</h4>
+            <h4 style='margin-top: 0; color: black;'>Project Description</h4>
             <p style='margin-bottom: 1rem; color: black; line-height: 1.6;'>
                 The device lifecycle data presented in this dashboard is sourced from the 
                 <strong>Electronic Waste Graveyard</strong> project by the U.S. PIRG Education Fund. 
