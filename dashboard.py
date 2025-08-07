@@ -8,7 +8,6 @@ import numpy as np
 # Page configuration
 st.set_page_config(
     page_title="Device Lifecycle Dashboard",
-    page_subtitle = "Small Project by Payam Saeedi",
     layout="wide",
     initial_sidebar_state="expanded"
 )
