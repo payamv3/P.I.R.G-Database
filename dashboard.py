@@ -327,6 +327,15 @@ def main():
     
     # Timeline chart - Support lifecycle visualization
     st.subheader("Device Support Timeline")
+
+    st.markdown(
+        """
+        <p style='color: #666; font-size: 0.9rem; margin-top: -0.5rem; margin-bottom: 1rem;'>
+        Hover over any point on the timeline to view full product information
+        </p>
+        """,
+        unsafe_allow_html=True
+    )
     
     # Create timeline data for visualization
     timeline_data = []
