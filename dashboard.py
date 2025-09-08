@@ -157,10 +157,10 @@ def main():
         unsafe_allow_html=True
     )
     
-    # Data source citation - right under the title
-    st.markdown(
+    # Project description moved to sidebar (above filters)
+    st.sidebar.markdown(
         """
-        <div style='text-align: left; margin-bottom: 2rem; padding: 1rem; background: white; border-radius: 10px; border: 2px solid #9932CC;'>
+        <div style='margin-bottom: 2rem; padding: 1rem; background: white; border-radius: 10px; border: 2px solid #9932CC;'>
             <h4 style='margin-top: 0; color: black;'>Project Description</h4>
             <p style='margin-bottom: 1rem; color: black; line-height: 1.6;'>
                 The device lifecycle data presented in this dashboard is sourced from the 
@@ -194,7 +194,6 @@ def main():
     # Category filter - synchronized with treemap selection
     all_categories = ['All Categories'] + sorted(df['Device Category'].unique().tolist())
     
-    # Determine the index for the selectbox based on session state
     if st.session_state.selected_category and st.session_state.selected_category in df['Device Category'].unique():
         default_category_index = all_categories.index(st.session_state.selected_category)
     elif st.session_state.selected_category is None:
@@ -209,7 +208,6 @@ def main():
         key='category_selectbox'
     )
     
-    # Update session state if selectbox changes
     if selected_category != 'All Categories':
         st.session_state.selected_category = selected_category
     elif selected_category == 'All Categories' and not hasattr(st.session_state, '_from_treemap'):
@@ -233,28 +231,21 @@ def main():
         st.session_state.duration_range = (min_duration, max_duration)
         st.rerun()
     
-    # Apply filters based on session state (needs to happen before sidebar chart)
+    # Apply filters
     filtered_df = df.copy()
-    
     if st.session_state.selected_brand != 'All Brands':
         filtered_df = filtered_df[filtered_df['Brand'] == st.session_state.selected_brand]
-    
     if st.session_state.selected_category is not None and st.session_state.selected_category != 'All Categories':
         filtered_df = filtered_df[filtered_df['Device Category'] == st.session_state.selected_category]
-    
     filtered_df = filtered_df[
         (filtered_df['Duration'] >= st.session_state.duration_range[0]) & 
         (filtered_df['Duration'] <= st.session_state.duration_range[1])
     ]
     
-    # Sidebar chart - Reasons for Discontinuing (now filtered_df exists)
+    # Sidebar chart - Reasons for Discontinuing
     st.sidebar.markdown("---")
     st.sidebar.markdown("### Reasons for Discontinuing")
-    
-    # Calculate reason counts for sidebar chart
     reason_counts = filtered_df['Reason for Discontinuing'].value_counts()
-    
-    # Create a simple bar chart for the sidebar
     fig_reasons = px.bar(
         x=reason_counts.values,
         y=reason_counts.index,
@@ -268,26 +259,25 @@ def main():
         showlegend=False,
         margin=dict(l=0, r=0, t=10, b=30),
         font=dict(size=10),
-        hovermode=False  # Disable hover tooltips
+        hovermode=False
     )
     fig_reasons.update_traces(
         texttemplate='%{x}',
         textposition='outside',
         textfont_size=10,
-        hovertemplate=None,  # Remove hover template
-        hoverinfo='skip'  # Skip hover info
+        hovertemplate=None,
+        hoverinfo='skip'
     )
     st.sidebar.plotly_chart(fig_reasons, use_container_width=True)
     st.sidebar.caption(f"Based on {len(filtered_df)} filtered devices")
     
-    # Main content area
+    # Main content
     if len(filtered_df) == 0:
         st.warning("No devices match the selected filters. Please adjust your selection.")
         return
     
     # Key metrics
     col1, col2, col3, col4 = st.columns(4)
-    
     with col1:
         st.markdown(f"""
         <div class="metric-container">
@@ -295,7 +285,6 @@ def main():
             <p>Total Devices</p>
         </div>
         """, unsafe_allow_html=True)
-    
     with col2:
         avg_duration = filtered_df['Duration'].mean()
         st.markdown(f"""
@@ -304,7 +293,6 @@ def main():
             <p>Avg Lifecycle (years)</p>
         </div>
         """, unsafe_allow_html=True)
-    
     with col3:
         unique_brands = filtered_df['Brand'].nunique()
         st.markdown(f"""
@@ -313,7 +301,6 @@ def main():
             <p>Unique Brands</p>
         </div>
         """, unsafe_allow_html=True)
-    
     with col4:
         unique_categories = filtered_df['Device Category'].nunique()
         st.markdown(f"""
@@ -325,9 +312,8 @@ def main():
     
     st.markdown("---")
     
-    # Timeline chart - Support lifecycle visualization
+    # Timeline chart
     st.subheader("Device Support Timeline")
-
     st.markdown(
         """
         <p style='color: #666; font-size: 0.9rem; margin-top: -0.5rem; margin-bottom: 1rem;'>
@@ -337,7 +323,6 @@ def main():
         unsafe_allow_html=True
     )
     
-    # Create timeline data for visualization
     timeline_data = []
     for idx, device in filtered_df.iterrows():
         timeline_data.append({
@@ -349,16 +334,10 @@ def main():
             'Duration': device['Duration'],
             'Reason': device['Reason for Discontinuing']
         })
-    
     timeline_df = pd.DataFrame(timeline_data)
     
-    # Create the timeline figure
     fig_timeline = go.Figure()
-    
-    # Single purple color for all timeline bars
     timeline_color = '#9932CC'
-    
-    # Add timeline bars for each device
     for idx, row in timeline_df.iterrows():
         fig_timeline.add_trace(go.Scatter(
             x=[row['Start'], row['End']],
@@ -379,8 +358,6 @@ def main():
                 "<extra></extra>"
             )
         ))
-    
-    # Update layout
     fig_timeline.update_layout(
         height=max(400, len(timeline_df) * 25),
         xaxis_title="Date",
@@ -395,14 +372,12 @@ def main():
         showlegend=False,
         margin=dict(l=150)
     )
-    
     st.plotly_chart(fig_timeline, use_container_width=True)
     
-    # Device details section
+    # Device details
     st.markdown("---")
     st.subheader(f"Device Details ({len(filtered_df)} devices)")
     
-    # Sort options
     sort_options = {
         'Device Name': 'Device Name',
         'Duration (Shortest First)': 'Duration',
@@ -410,7 +385,6 @@ def main():
         'Start Date (Newest First)': 'Start Date_desc',
         'Start Date (Oldest First)': 'Start Date'
     }
-    
     sort_by = st.selectbox("Sort by:", list(sort_options.keys()))
     
     if sort_by == 'Duration (Longest First)':
@@ -424,7 +398,6 @@ def main():
     else:
         display_df = filtered_df.sort_values('Device Name')
     
-    # Display device cards
     for idx, device in display_df.iterrows():
         st.markdown(create_device_card(device), unsafe_allow_html=True)
     
