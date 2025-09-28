@@ -33,7 +33,7 @@ st.markdown("""
         text-align: center;
         color: #4B0082;
         margin-bottom: 2rem;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        
     }
     .metric-container {
         background: white;
