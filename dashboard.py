@@ -172,10 +172,7 @@ def main():
                 Source: U.S. PIRG Education Fund. (2025). <em>Electronic Waste Graveyard</em>. 
                 Retrieved from <a href="https://pirg.org/edfund/resources/electronic-waste-graveyard/" 
                 target="_blank" style="color: #9932CC;">https://pirg.org/edfund/resources/electronic-waste-graveyard/</a>
-            </p>
-        <div style='text-align: center; margin-top: -1.5rem; margin-bottom: 2rem;'>
-            <p style='font-size: 1.2rem; color: #666;'>A small project by Payam Saeedi</p>
-        </div>  
+            </p> 
         </div>
         """,
         unsafe_allow_html=True
