@@ -1,0 +1,1 @@
+Ever had to give up a device because it was no longer "supported"? The Electronic Waste Graveyard project by the U.S. PIRG Education Fund tracks over 100 consumer tech products that have been rendered unusable due to lack of software support or server shutdowns since 2014. I built a dashboard on top of it for easier exploration
