@@ -147,15 +147,6 @@ def main():
     
     # Main header
     st.markdown('<h1 class="main-header">Device Lifecycle Dashboard</h1>', unsafe_allow_html=True)
-
-    st.markdown(
-        """
-        <div style='text-align: center; margin-top: -1.5rem; margin-bottom: 2rem;'>
-            <p style='font-size: 1.2rem; color: #666;'>A small project by Payam Saeedi</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
     
     # Project description moved to sidebar (above filters)
     st.sidebar.markdown(
